@@ -1,0 +1,83 @@
+body {
+	background-color: #1f2025;
+}
+
+#board {
+	position: relative;
+	width: 44%;
+	height: 900px;
+	margin: auto;
+	background: url("board.jpg") no-repeat;
+	border: 1px solid #303436;
+} 
+#messageArea {
+	position: absolute;
+	width: 300px;
+	height: 20px;
+	top: 0px;
+	padding: 15px;
+	right: 0;
+	color: #303436;
+	font-size: 1em;
+	background-color: #dbe4e8;
+}
+table {
+	position: absolute;
+	left: 130px;
+	top: 73px;
+	border-spacing: 0px;
+}
+td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	width: 71px;
+	height: 71px;
+	background: url(waterTile.gif) no-repeat center / cover;
+}
+form {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	padding: 15px;
+	background-color: #393a3f;
+}
+form input {
+	background-color: #dbe4e8;
+	border-color: #1f2025;
+	font-size: 1em;	
+}
+.hit {
+	background: url("shipTile.gif") no-repeat center / cover;
+	background-color: #d1d1d1;
+}
+.miss {
+	background: url("missTile.gif") no-repeat center / cover;
+	background-color: #d1d1d1;
+}
+.nums1{
+	border: 1px dotted black;
+	border-collapse: collapse;
+	width: 71px;
+	height: 31px;
+	color: white;
+	background-color: transparent;
+	text-align: center;
+}
+.corner{
+	border: 1px dotted black;
+	border-collapse: collapse;
+	width: 31px;
+	height: 31px;
+	color: white;
+	background-color: transparent;
+	text-align: center;
+}
+.nums2{
+	border: 1px dotted black;
+	border-collapse: collapse;
+	width: 31px;
+	height: 71px;
+	color: white;
+	background-color: transparent;
+	text-align: center;
+}
