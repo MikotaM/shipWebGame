@@ -201,4 +201,4 @@ function handleFireButton(){
   guessInput.value = "";
 }
 window.onload = init;
-console.table(model.ships.map(s => s.lokalizacja));
+//console.table(model.ships.map(s => s.lokalizacja));
