@@ -3,31 +3,75 @@ var model = {
   rozmiarTablica: 10,
   statekZatopione: 0,
 
-  fleet: [3,3,3, 2,2,2,2,2, 4],
+  fleet: [3,3,3, 2,2,2,2, 4,4],
   ships: [],
 
-  fire: function (guess) {
-    for (var i = 0; i < this.ships.length; i++){
-      var ship = this.ships[i];
-      var lokalizacja = ship.lokalizacja;       
-      var index = lokalizacja.indexOf(guess);
-      if (ship.trafienia[index] === "hit") {
-          view.displayMessage("Już wcześniej trafiłeś to pole");
-          return true;
-      } else if (index >= 0){
-        ship.trafienia[index] = "hit";
-        view.displayHit(guess);
-        view.displayMessage("Trafiony!");
-        
-          if (this.isSunk(ship)){
-          view.displayMessage("Zatopiłeś okręt!");
-          this.statekZatopione++;
-        }
-        return true;
-      }
+  maxHP: 100,
+  hp: 10,
+
+  dmgMiss: 5,
+  healHit: 15,
+  gameOver: false,
+
+
+  takeDamage: function(amount){
+    this.hp -= amount;
+    if (this.hp <= 0){ 
+      this.hp = 0;
+      this.gameOver=true;
+      document.getElementById("guessInput").disabled=true;
+      document.getElementById("fireButton").disabled=true;
     }
+  },
+
+  
+  heal: function(amount){
+    this.hp += amount;
+    if (this.hp > this.maxHP) this.hp = this.maxHP;
+  },
+
+  fire: function (guess) {
+      for (var i = 0; i < this.ships.length; i++){
+          var ship = this.ships[i];
+          var lokalizacja = ship.lokalizacja;
+          var index = lokalizacja.indexOf(guess);
+
+          if (index >= 0) {
+
+              if (ship.trafienia[index] === "hit") {
+                  view.displayMessage("Już wcześniej trafiłeś to pole");
+                  return true;
+              }
+
+              ship.trafienia[index] = "hit";
+              view.displayHit(guess);
+
+              this.heal(this.healHit);
+
+              view.displayMessage(
+                  "Trafiony! +HP (" + this.hp + "/" + this.maxHP + ")"
+              );
+
+              if (this.isSunk(ship)){
+                  view.displayMessage("Zatopiłeś okręt!");
+                  this.statekZatopione++;
+              }
+
+              return true;
+          }
+      }
+
     view.displayMiss(guess);
-    view.displayMessage("Spudłowałeś.");
+    this.takeDamage(this.dmgMiss);
+
+    view.displayMessage(
+        "Spudłowałeś! -HP (" + this.hp + "/" + this.maxHP + ")"
+    );
+
+    if (this.hp <= 0){
+        view.displayMessage("Koniec gry – brak HP!");
+    }
+
     return false;
   },
   
@@ -57,8 +101,8 @@ var model = {
         });
     }
 
-    console.log("Tablica okrętów:");
-    console.log(this.ships);
+    //console.log("Tablica okrętów:");
+    //console.log(this.ships);
   },
 
     
@@ -144,6 +188,8 @@ var controller = {
       var hit = model.fire(location);
       if (hit && model.statekZatopione === model.ships.length){
         view.displayMessage("Zatopiłeś wszystkie okręty, w " + this.guesses + " próbach.");
+        document.getElementById("guessInput").disabled=true;
+        document.getElementById("fireButton").disabled=true;
       }
     }
   }
@@ -181,24 +227,23 @@ function init(){
   	fireButton.onclick = handleFireButton;
     var guessInput = document.getElementById("guessInput");
     guessInput.onkeypress = handleKeyPress;
-    
+
     model.generateShipsLocations();
 }
 
 function handleKeyPress(e){
     var fireButton = document.getElementById("fireButton");
     if (e.keyCode === 13){ 
-        fireButton.click();
-        return false;
+      fireButton.click();
+      return false;
     }
 }
 
 function handleFireButton(){
   var guessInput = document.getElementById("guessInput");
-  var guess = guessInput.value;
-  controller.processGuess(guess);
-
+    var guess = guessInput.value;
+    controller.processGuess(guess);
   guessInput.value = "";
 }
 window.onload = init;
-console.table(model.ships.map(s => s.lokalizacja));
+//console.table(model.ships.map(s => s.lokalizacja));
